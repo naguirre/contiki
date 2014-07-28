@@ -53,12 +53,20 @@
  * B1: P1_2
  * B2: P1_3
  *
+ * ZB500 module with CC2530
+ * B1: P0_5
+ * B2: P0_4
  */
 #if MODEL_CC2531
 #define BUTTON1_PORT 1
 #define BUTTON1_PIN  2
 #define BUTTON2_PORT 1
 #define BUTTON2_PIN  3
+#elif MODELS_CONF_CC2530_ZB500
+#define BUTTON1_PORT 0
+#define BUTTON1_PIN  4
+#define BUTTON2_PORT 0
+#define BUTTON2_PIN  5
 #else
 #define BUTTON1_PORT 0
 #define BUTTON1_PIN  1
@@ -77,6 +85,15 @@ extern const struct sensors_sensor button_2_sensor;
 /* USB Dongle */
 /* Buttons: P1_2 & P1_3 - Port 1 ISR needed */
 void port_1_isr(void) __interrupt(P1INT_VECTOR);
+#define   BUTTON_SENSOR_ACTIVATE() do { \
+    button_1_sensor.configure(SENSORS_ACTIVE, 1); \
+    button_2_sensor.configure(SENSORS_ACTIVE, 1); \
+} while(0)
+
+#elif MODELS_CONF_CC2530_ZB500
+/* Module ZB500 with CC2530 */
+/* Buttons: P0_4 & P0_5 - Port 0 ISR needed */
+void port_0_isr(void) __interrupt(P0INT_VECTOR);
 #define   BUTTON_SENSOR_ACTIVATE() do { \
     button_1_sensor.configure(SENSORS_ACTIVE, 1); \
     button_2_sensor.configure(SENSORS_ACTIVE, 1); \
