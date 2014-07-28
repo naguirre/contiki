@@ -51,7 +51,9 @@
 #undef LEDS_GREEN
 #undef LEDS_YELLOW
 #undef LEDS_RED
+#ifndef MODELS_CONF_CC2530_ZB500
 #define LEDS_YELLOW 4
+#endif
 
 /*
  * Smart RF LEDs
@@ -96,6 +98,28 @@
 /* P0DIR and P0SEL masks */
 #define LED2_MASK  0x01
 #define LED1_MASK  0x02
+
+
+
+/* Module ZB500 with CC2530 */
+
+#elif MODELS_CONF_CC2530_ZB500
+#define MODEL_STRING "Module ZB500 with CC2530\n"
+#define LEDS_GREEN    1
+#define LEDS_YELLOW   2
+#define LEDS_RED      4
+
+
+#define LED1_PIN   P0_1
+#define LED2_PIN   P0_0
+#define LED3_PIN   P1_4
+
+
+#define LED1_MASK  0x01
+#define LED2_MASK  0x02
+#define LED3_MASK  0x10
+
+
 #else
 #define MODEL_STRING "TI SmartRF05 EB\n"
 #define LEDS_GREEN    1

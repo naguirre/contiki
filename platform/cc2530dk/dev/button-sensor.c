@@ -38,7 +38,7 @@
 /*---------------------------------------------------------------------------*/
 static CC_AT_DATA struct timer debouncetimer;
 /*---------------------------------------------------------------------------*/
-/* Button 1 - SmartRF and cc2531 USB Dongle */
+/* Button 1 - SmartRF, cc2531 USB Dongle, and ZB500 module with CC2530 */
 /*---------------------------------------------------------------------------*/
 static int
 value_b1(int type)
@@ -85,9 +85,9 @@ configure_b1(int type, int value)
   return 0;
 }
 /*---------------------------------------------------------------------------*/
-/* Button 2 - cc2531 USb Dongle only */
+/* Button 2 - cc2531 USb Dongle and ZB500 module with CC2530 */
 /*---------------------------------------------------------------------------*/
-#if MODELS_CONF_CC2531_USB_STICK
+#if MODELS_CONF_CC2531_USB_STICK | MODELS_CONF_CC2530_ZB500
 static int
 value_b2(int type)
 {
@@ -170,6 +170,38 @@ port_1_isr(void) __interrupt(P1INT_VECTOR)
   ENERGEST_OFF(ENERGEST_TYPE_IRQ);
   EA = 1;
 }
+
+
+#elif MODELS_CONF_CC2530_ZB500
+void
+port_0_isr(void) __interrupt(P0INT_VECTOR)
+{
+  EA = 0;
+  ENERGEST_ON(ENERGEST_TYPE_IRQ);
+
+  /* This ISR is for the entire port. Check if the interrupt was caused by our
+   * button's pin. */
+  if(BUTTON_IRQ_CHECK(1)) {
+    if(timer_expired(&debouncetimer)) {
+      timer_set(&debouncetimer, CLOCK_SECOND / 8);
+      sensors_changed(&button_1_sensor);
+    }
+  }
+  if(BUTTON_IRQ_CHECK(2)) {
+    if(timer_expired(&debouncetimer)) {
+      timer_set(&debouncetimer, CLOCK_SECOND / 8);
+      sensors_changed(&button_2_sensor);
+    }
+  }
+
+  BUTTON_IRQ_FLAG_OFF(1);
+  BUTTON_IRQ_FLAG_OFF(2);
+
+  ENERGEST_OFF(ENERGEST_TYPE_IRQ);
+  EA = 1;
+}
+
+
 #else
 void
 port_0_isr(void) __interrupt(P0INT_VECTOR)
@@ -195,6 +227,6 @@ port_0_isr(void) __interrupt(P0INT_VECTOR)
 #pragma restore
 /*---------------------------------------------------------------------------*/
 SENSORS_SENSOR(button_1_sensor, BUTTON_SENSOR, value_b1, configure_b1, status_b1);
-#if MODELS_CONF_CC2531_USB_STICK
+#if MODELS_CONF_CC2531_USB_STICK | MODELS_CONF_CC2530_ZB500
 SENSORS_SENSOR(button_2_sensor, BUTTON_SENSOR, value_b2, configure_b2, status_b2);
 #endif
