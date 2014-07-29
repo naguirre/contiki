@@ -344,7 +344,7 @@ set_ip_from_prefix(uip_ipaddr_t *ipaddr, rpl_prefix_t *prefix)
 static void
 check_prefix(rpl_prefix_t *last_prefix, rpl_prefix_t *new_prefix)
 {
-  uip_ipaddr_t ipaddr;
+  CC_OFF_STACK uip_ipaddr_t ipaddr;
   uip_ds6_addr_t *rep;
 
   if(last_prefix != NULL && new_prefix != NULL &&
@@ -380,7 +380,7 @@ check_prefix(rpl_prefix_t *last_prefix, rpl_prefix_t *new_prefix)
 int
 rpl_set_prefix(rpl_dag_t *dag, uip_ipaddr_t *prefix, unsigned len)
 {
-  rpl_prefix_t last_prefix;
+  CC_OFF_STACK rpl_prefix_t last_prefix;
   uint8_t last_len = dag->prefix_info.length;
 
   if(len > 128) {
@@ -618,7 +618,7 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
 {
   rpl_parent_t *last_parent;
   rpl_dag_t *dag, *end, *best_dag;
-  rpl_rank_t old_rank;
+  CC_OFF_STACK rpl_rank_t old_rank;
 
   old_rank = instance->current_dag->rank;
   last_parent = instance->current_dag->preferred_parent;
@@ -1100,7 +1100,7 @@ rpl_process_parent_event(rpl_instance_t *instance, rpl_parent_t *p)
   int return_value;
 
 #if DEBUG
-  rpl_rank_t old_rank;
+  CC_OFF_STACK rpl_rank_t old_rank;
   old_rank = instance->current_dag->rank;
 #endif /* DEBUG */
 

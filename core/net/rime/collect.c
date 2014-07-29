@@ -313,7 +313,7 @@ update_parent(struct collect_conn *tc)
      by Gnawali et al (SenSys 2009). */
 
   if(best != NULL) {
-    linkaddr_t previous_parent;
+    CC_OFF_STACK linkaddr_t previous_parent;
 
     if(DRAW_TREE) {
       linkaddr_copy(&previous_parent, &tc->parent);
@@ -538,7 +538,7 @@ proactive_probing_callback(void *ptr)
           n != NULL; n = list_item_next(n)) {
         if(n->rtmetric + COLLECT_LINK_ESTIMATE_UNIT < c->rtmetric &&
            collect_link_estimate_num_estimates(&n->le) == 0) {
-          linkaddr_t current_parent;
+          CC_OFF_STACK linkaddr_t current_parent;
 
           PRINTF("proactive_probing_callback: found neighbor with no link estimate, %d.%d\n",
                  n->addr.u8[LINKADDR_SIZE - 2], n->addr.u8[LINKADDR_SIZE - 1]);
@@ -572,7 +572,7 @@ send_queued_packet(struct collect_conn *c)
   struct queuebuf *q;
   struct collect_neighbor *n;
   struct packetqueue_item *i;
-  struct data_msg_hdr hdr;
+  CC_OFF_STACK struct data_msg_hdr hdr;
   int max_mac_rexmits;
 
   /* If we are currently sending a packet, we do not attempt to send
@@ -680,7 +680,7 @@ retransmit_current_packet(struct collect_conn *c)
   struct queuebuf *q;
   struct collect_neighbor *n;
   struct packetqueue_item *i;
-  struct data_msg_hdr hdr;
+  CC_OFF_STACK struct data_msg_hdr hdr;
   int max_mac_rexmits;
 
   /* Grab the first packet on the send queue, which is the one we are
@@ -778,7 +778,7 @@ send_next_packet(struct collect_conn *tc)
 static void
 handle_ack(struct collect_conn *tc)
 {
-  struct ack_msg msg;
+  CC_OFF_STACK struct ack_msg msg;
   struct collect_neighbor *n;
 
   PRINTF("handle_ack: sender %d.%d current_parent %d.%d, id %d seqno %d\n",
@@ -927,7 +927,7 @@ node_packet_received(struct unicast_conn *c, const linkaddr_t *from)
   struct collect_conn *tc = (struct collect_conn *)
     ((char *)c - offsetof(struct collect_conn, unicast_conn));
   int i;
-  struct data_msg_hdr hdr;
+  CC_OFF_STACK struct data_msg_hdr hdr;
   uint8_t ackflags = 0;
   struct collect_neighbor *n;
 
@@ -950,7 +950,7 @@ node_packet_received(struct unicast_conn *c, const linkaddr_t *from)
      the packet. */
   if(packetbuf_attr(PACKETBUF_ATTR_PACKET_TYPE) ==
      PACKETBUF_ATTR_PACKET_TYPE_DATA) {
-    linkaddr_t ack_to;
+    CC_OFF_STACK linkaddr_t ack_to;
     uint8_t packet_seqno;
 
     stats.datarecv++;

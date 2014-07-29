@@ -40,6 +40,7 @@
 #include "net/mac/frame802154.h"
 #include "net/packetbuf.h"
 #include "lib/random.h"
+#include "sys/cc.h"
 #include <string.h>
 
 #define DEBUG 0
@@ -89,7 +90,7 @@ is_broadcast_addr(uint8_t mode, uint8_t *addr)
 static int
 create_frame(int type, int do_create)
 {
-  frame802154_t params;
+  CC_OFF_STACK frame802154_t params;
   int len;
 
   /* init to zeros */
@@ -206,7 +207,7 @@ create(void)
 static int
 parse(void)
 {
-  frame802154_t frame;
+  CC_OFF_STACK frame802154_t frame;
   int len;
   len = packetbuf_datalen();
   if(frame802154_parse(packetbuf_dataptr(), len, &frame) &&

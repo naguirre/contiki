@@ -181,7 +181,7 @@ void
 dis_output(uip_ipaddr_t *addr)
 {
   unsigned char *buffer;
-  uip_ipaddr_t tmpaddr;
+  CC_OFF_STACK uip_ipaddr_t tmpaddr;
 
   /*
    * DAG Information Solicitation  - 2 bytes reserved
@@ -210,14 +210,16 @@ dis_output(uip_ipaddr_t *addr)
 static void
 dio_input(void)
 {
+
   unsigned char *buffer;
   uint8_t buffer_length;
-  rpl_dio_t dio;
+  CC_OFF_STACK rpl_dio_t dio;
   uint8_t subopt_type;
   int i;
   int len;
-  uip_ipaddr_t from;
+  CC_OFF_STACK uip_ipaddr_t from;
   uip_ds6_nbr_t *nbr;
+
 
   memset(&dio, 0, sizeof(dio));
 
@@ -233,11 +235,12 @@ dio_input(void)
 
   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 
+
   /* DAG Information Object */
   PRINTF("RPL: Received a DIO from ");
   PRINT6ADDR(&from);
   PRINTF("\n");
-
+#if 1
   if((nbr = uip_ds6_nbr_lookup(&from)) == NULL) {
     if((nbr = uip_ds6_nbr_add(&from, (uip_lladdr_t *)
                               packetbuf_addr(PACKETBUF_ADDR_SENDER),
@@ -260,6 +263,7 @@ dio_input(void)
   } else {
     PRINTF("RPL: Neighbor already in neighbor cache\n");
   }
+#endif
 
   buffer_length = uip_len - uip_l3_icmp_hdr_len;
 
@@ -410,14 +414,18 @@ dio_input(void)
 	(unsigned)subopt_type);
     }
   }
-
 #ifdef RPL_DEBUG_DIO_INPUT
   RPL_DEBUG_DIO_INPUT(&from, &dio);
 #endif
 
+  putchar('j');
+  putchar('\n');
+
   rpl_process_dio(&from, &dio);
 
+
   uip_len = 0;
+
 }
 /*---------------------------------------------------------------------------*/
 void
@@ -427,7 +435,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   int pos;
   rpl_dag_t *dag = instance->current_dag;
 #if !RPL_LEAF_ONLY
-  uip_ipaddr_t addr;
+  CC_OFF_STACK uip_ipaddr_t addr;
 #endif /* !RPL_LEAF_ONLY */
 
 #if RPL_LEAF_ONLY
@@ -573,7 +581,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 static void
 dao_input(void)
 {
-  uip_ipaddr_t dao_sender_addr;
+  CC_OFF_STACK uip_ipaddr_t dao_sender_addr;
   rpl_dag_t *dag;
   rpl_instance_t *instance;
   unsigned char *buffer;
@@ -587,7 +595,7 @@ dao_input(void)
   uint8_t pathcontrol;
   uint8_t pathsequence;
   */
-  uip_ipaddr_t prefix;
+  CC_OFF_STACK uip_ipaddr_t prefix;
   uip_ds6_route_t *rep;
   uint8_t buffer_length;
   int pos;
@@ -802,7 +810,7 @@ void
 dao_output(rpl_parent_t *parent, uint8_t lifetime)
 {
   /* Destination Advertisement Object */
-  uip_ipaddr_t prefix;
+  CC_OFF_STACK uip_ipaddr_t prefix;
 
   if(get_global_addr(&prefix) == 0) {
     PRINTF("RPL: No global address set for this node - suppressing DAO\n");

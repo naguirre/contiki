@@ -156,7 +156,7 @@ field_len(frame802154_t *p, field_length_t *flen)
 int
 frame802154_hdrlen(frame802154_t *p)
 {
-  field_length_t flen;
+  CC_OFF_STACK field_length_t flen;
   field_len(p, &flen);
   return 3 + flen.dest_pid_len + flen.dest_addr_len +
     flen.src_pid_len + flen.src_addr_len + flen.aux_sec_len;
@@ -180,7 +180,7 @@ int
 frame802154_create(frame802154_t *p, uint8_t *buf, int buf_len)
 {
   int c;
-  field_length_t flen;
+  CC_OFF_STACK field_length_t flen;
   uint8_t *tx_frame_buffer;
   uint8_t pos;
 
@@ -252,7 +252,7 @@ int
 frame802154_parse(uint8_t *data, int len, frame802154_t *pf)
 {
   uint8_t *p;
-  frame802154_fcf_t fcf;
+  CC_OFF_STACK frame802154_fcf_t fcf;
   int c;
 
   if(len < 3) {

@@ -136,4 +136,16 @@
  */
 #define CC_CONCAT(s1, s2) CC_CONCAT2(s1, s2)
 
+#ifdef CC_CONF_STACK_FRIENDLY
+#define CC_STACK_FRIENDLY CC_CONF_STACK_FRIENDLY
+#else
+#define CC_STACK_FRIENDLY 0
+#endif
+
+#if CC_STACK_FRIENDLY
+#define CC_OFF_STACK static
+#else
+#define CC_OFF_STACK
+#endif
+
 #endif /* CC_H_ */
