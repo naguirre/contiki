@@ -148,4 +148,19 @@
 #define CC_OFF_STACK
 #endif
 
+extern char *stack_top;
+extern char *stack_bottom;
+
+#include "debug.h"
+
+#define STACK_USAGE(message) do {               \
+  int a;                                        \
+  putstring("S: 0x");                           \
+  stack_bottom = (char *)&a;                    \
+  putdec(stack_bottom - stack_top);             \
+  putchar(' ');                                 \
+  putstring(message);                           \
+  putchar('\n');                                \
+  }while(0);                                    \
+
 #endif /* CC_H_ */

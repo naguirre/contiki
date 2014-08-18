@@ -219,7 +219,7 @@ dio_input(void)
   int len;
   CC_OFF_STACK uip_ipaddr_t from;
   uip_ds6_nbr_t *nbr;
-
+  STACK_USAGE("dio_input");
 
   memset(&dio, 0, sizeof(dio));
 
@@ -418,12 +418,7 @@ dio_input(void)
   RPL_DEBUG_DIO_INPUT(&from, &dio);
 #endif
 
-  putchar('j');
-  putchar('\n');
-
   rpl_process_dio(&from, &dio);
-
-
   uip_len = 0;
 
 }

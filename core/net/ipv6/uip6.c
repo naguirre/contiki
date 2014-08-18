@@ -409,7 +409,7 @@ uip_udpchksum(void)
 void
 uip_init(void)
 {
-   
+  STACK_USAGE("uip_init");   
   uip_ds6_init();
   uip_icmp6_init();
   uip_nd6_init();
@@ -443,7 +443,7 @@ struct uip_conn *
 uip_connect(uip_ipaddr_t *ripaddr, uint16_t rport)
 {
   register struct uip_conn *conn, *cconn;
-  
+   STACK_USAGE("uip_connect"); 
   /* Find an unused local port. */
  again:
   ++lastport;
@@ -512,6 +512,7 @@ uip_connect(uip_ipaddr_t *ripaddr, uint16_t rport)
 void
 remove_ext_hdr(void)
 {
+  STACK_USAGE("remove_ext_hdr");
   /* Remove ext header before TCP/UDP processing. */
   if(uip_ext_len > 0) {
     PRINTF("Cutting ext-header before processing (extlen: %d, uiplen: %d)\n",
@@ -539,7 +540,7 @@ struct uip_udp_conn *
 uip_udp_new(const uip_ipaddr_t *ripaddr, uint16_t rport)
 {
   register struct uip_udp_conn *conn;
-  
+  STACK_USAGE("uip_udp_new");
   /* Find an unused local port. */
  again:
   ++lastport;
@@ -922,6 +923,7 @@ uip_process(uint8_t flag)
 #if UIP_TCP
   register struct uip_conn *uip_connr = uip_conn;
 #endif /* UIP_TCP */
+  STACK_USAGE("uip_process");
 #if UIP_UDP
   if(flag == UIP_UDP_SEND_CONN) {
     goto udp_send;

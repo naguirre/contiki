@@ -66,6 +66,7 @@ static uint8_t dio_send_ok;
 static void
 handle_periodic_timer(void *ptr)
 {
+  STACK_USAGE("handle_periodic_timer");
   rpl_purge_routes();
   rpl_recalculate_ranks();
 
@@ -85,7 +86,7 @@ new_dio_interval(rpl_instance_t *instance)
 {
   uint32_t time;
   clock_time_t ticks;
-
+  STACK_USAGE("nex_dio_interval");
   /* TODO: too small timer intervals for many cases */
   time = 1UL << instance->dio_intcurrent;
 
@@ -129,7 +130,7 @@ static void
 handle_dio_timer(void *ptr)
 {
   rpl_instance_t *instance;
-
+  STACK_USAGE("handler_dio_timer");
   instance = (rpl_instance_t *)ptr;
 
   PRINTF("RPL: DIO Timer triggered\n");
@@ -171,6 +172,7 @@ handle_dio_timer(void *ptr)
 void
 rpl_reset_periodic_timer(void)
 {
+  STACK_USAGE("rpl_reset_periodic_timer");
   next_dis = RPL_DIS_INTERVAL / 2 +
     ((uint32_t)RPL_DIS_INTERVAL * (uint32_t)random_rand()) / RANDOM_RAND_MAX -
     RPL_DIS_START_DELAY;
@@ -181,6 +183,7 @@ rpl_reset_periodic_timer(void)
 void
 rpl_reset_dio_timer(rpl_instance_t *instance)
 {
+  STACK_USAGE("rpl_reset_dio_timer");
 #if !RPL_LEAF_ONLY
   /* Do not reset if we are already on the minimum interval,
      unless forced to do so. */
@@ -199,6 +202,7 @@ static void handle_dao_timer(void *ptr);
 static void
 set_dao_lifetime_timer(rpl_instance_t *instance)
 {
+  STACK_USAGE("set_dao_lifetime_timer");
   if(rpl_get_mode() == RPL_MODE_FEATHER) {
     return;
   }
@@ -225,7 +229,7 @@ handle_dao_timer(void *ptr)
   uip_mcast6_route_t *mcast_route;
   uint8_t i;
 #endif
-
+  STACK_USAGE("handler_dao_timer");
   instance = (rpl_instance_t *)ptr;
 
   if(!dio_send_ok && uip_ds6_get_link_local(ADDR_PREFERRED) == NULL) {
@@ -279,7 +283,7 @@ static void
 schedule_dao(rpl_instance_t *instance, clock_time_t latency)
 {
   clock_time_t expiration_time;
-
+  STACK_USAGE("schedule_dao");
   if(rpl_get_mode() == RPL_MODE_FEATHER) {
     return;
   }
@@ -307,18 +311,21 @@ schedule_dao(rpl_instance_t *instance, clock_time_t latency)
 void
 rpl_schedule_dao(rpl_instance_t *instance)
 {
+  STACK_USAGE("rpl_schedule_dao");
   schedule_dao(instance, RPL_DAO_LATENCY);
 }
 /*---------------------------------------------------------------------------*/
 void
 rpl_schedule_dao_immediately(rpl_instance_t *instance)
 {
+  STACK_USAGE("rpl_schedule_dao_immediately");
   schedule_dao(instance, 0);
 }
 /*---------------------------------------------------------------------------*/
 void
 rpl_cancel_dao(rpl_instance_t *instance)
 {
+  STACK_USAGE("rpl_cancel_dao");
   ctimer_stop(&instance->dao_timer);
   ctimer_stop(&instance->dao_lifetime_timer);
 }

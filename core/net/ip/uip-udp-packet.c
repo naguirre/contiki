@@ -82,7 +82,7 @@ void
 uip_udp_packet_sendto(struct uip_udp_conn *c, const void *data, int len,
 		      const uip_ipaddr_t *toaddr, uint16_t toport)
 {
-  uip_ipaddr_t curaddr;
+  CC_OFF_STACK uip_ipaddr_t curaddr;
   uint16_t curport;
 
   if(toaddr != NULL) {

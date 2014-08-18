@@ -59,6 +59,10 @@ static unsigned long irq_energest = 0;
 #define ENERGEST_IRQ_SAVE(a) do {} while(0)
 #define ENERGEST_IRQ_RESTORE(a) do {} while(0)
 #endif
+
+char *stack_top;
+char *stack_bottom;
+
 /*---------------------------------------------------------------------------*/
 static void
 fade(int l) CC_NON_BANKED
@@ -160,6 +164,9 @@ set_rf_params(void) CC_NON_BANKED
 int
 main(void) CC_NON_BANKED
 {
+  char a;
+  stack_top = (char *)&a;
+
   /* Hardware initialization */
   clock_init();
   soc_init();
@@ -188,6 +195,8 @@ main(void) CC_NON_BANKED
   serial_line_init();
 #endif
   fade(LEDS_RED);
+
+  STACK_USAGE("main")
 
   PUTSTRING("##########################################\n");
   putstring(CONTIKI_VERSION_STRING "\n");
@@ -263,6 +272,7 @@ main(void) CC_NON_BANKED
 #if UIP_CONF_IPV6
   memcpy(&uip_lladdr.addr, &linkaddr_node_addr, sizeof(uip_lladdr.addr));
   queuebuf_init();
+  STACK_USAGE("before process_start");
   process_start(&tcpip_process, NULL);
 #endif /* UIP_CONF_IPV6 */
 

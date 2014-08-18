@@ -64,28 +64,28 @@ LIST(nbr_table_keys);
 
 /*---------------------------------------------------------------------------*/
 /* Get a key from a neighbor index */
-static nbr_table_key_t *
+static inline nbr_table_key_t *
 key_from_index(int index)
 {
   return index != -1 ? &((nbr_table_key_t *)neighbor_addr_mem.mem)[index] : NULL;
 }
 /*---------------------------------------------------------------------------*/
 /* Get an item from its neighbor index */
-static nbr_table_item_t *
+static inline nbr_table_item_t *
 item_from_index(nbr_table_t *table, int index)
 {
   return table != NULL && index != -1 ? (char *)table->data + index * table->item_size : NULL;
 }
 /*---------------------------------------------------------------------------*/
 /* Get the neighbor index of an item */
-static int
+static inline int
 index_from_key(nbr_table_key_t *key)
 {
   return key != NULL ? key - (nbr_table_key_t *)neighbor_addr_mem.mem : -1;
 }
 /*---------------------------------------------------------------------------*/
 /* Get the neighbor index of an item */
-static int
+static inline int
 index_from_item(nbr_table_t *table, const nbr_table_item_t *item)
 {
   return table != NULL && item != NULL ? ((int)((char *)item - (char *)table->data)) / table->item_size : -1;
@@ -99,14 +99,14 @@ item_from_key(nbr_table_t *table, nbr_table_key_t *key)
 }
 /*---------------------------------------------------------------------------*/
 /* Get the key af an item */
-static nbr_table_key_t *
+static inline nbr_table_key_t *
 key_from_item(nbr_table_t *table, const nbr_table_item_t *item)
 {
   return key_from_index(index_from_item(table, item));
 }
 /*---------------------------------------------------------------------------*/
 /* Get the index of a neighbor from its link-layer address */
-static int
+static inline int
 index_from_lladdr(const linkaddr_t *lladdr)
 {
   nbr_table_key_t *key;
@@ -126,7 +126,7 @@ index_from_lladdr(const linkaddr_t *lladdr)
 }
 /*---------------------------------------------------------------------------*/
 /* Get bit from "used" or "locked" bitmap */
-static int
+static inline int
 nbr_get_bit(uint8_t *bitmap, nbr_table_t *table, nbr_table_item_t *item)
 {
   int item_index = index_from_item(table, item);
@@ -139,7 +139,7 @@ nbr_get_bit(uint8_t *bitmap, nbr_table_t *table, nbr_table_item_t *item)
 }
 /*---------------------------------------------------------------------------*/
 /* Set bit in "used" or "locked" bitmap */
-static int
+static inline int
 nbr_set_bit(uint8_t *bitmap, nbr_table_t *table, nbr_table_item_t *item, int value)
 {
   int item_index = index_from_item(table, item);

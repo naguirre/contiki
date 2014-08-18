@@ -77,27 +77,27 @@ typedef struct nbr_table {
 
 /** \name Neighbor tables: register and loop through table elements */
 /** @{ */
-int nbr_table_register(nbr_table_t *table, nbr_table_callback *callback);
-nbr_table_item_t *nbr_table_head(nbr_table_t *table);
-nbr_table_item_t *nbr_table_next(nbr_table_t *table, nbr_table_item_t *item);
+inline int nbr_table_register(nbr_table_t *table, nbr_table_callback *callback);
+inline nbr_table_item_t *nbr_table_head(nbr_table_t *table);
+inline nbr_table_item_t *nbr_table_next(nbr_table_t *table, nbr_table_item_t *item);
 /** @} */
 
 /** \name Neighbor tables: add and get data */
 /** @{ */
-nbr_table_item_t *nbr_table_add_lladdr(nbr_table_t *table, const linkaddr_t *lladdr);
-nbr_table_item_t *nbr_table_get_from_lladdr(nbr_table_t *table, const linkaddr_t *lladdr);
+inline nbr_table_item_t *nbr_table_add_lladdr(nbr_table_t *table, const linkaddr_t *lladdr);
+inline nbr_table_item_t *nbr_table_get_from_lladdr(nbr_table_t *table, const linkaddr_t *lladdr);
 /** @} */
 
 /** \name Neighbor tables: set flags (unused, locked, unlocked) */
 /** @{ */
-int nbr_table_remove(nbr_table_t *table, nbr_table_item_t *item);
-int nbr_table_lock(nbr_table_t *table, nbr_table_item_t *item);
-int nbr_table_unlock(nbr_table_t *table, nbr_table_item_t *item);
+inline int nbr_table_remove(nbr_table_t *table, nbr_table_item_t *item);
+inline int nbr_table_lock(nbr_table_t *table, nbr_table_item_t *item);
+inline int nbr_table_unlock(nbr_table_t *table, nbr_table_item_t *item);
 /** @} */
 
 /** \name Neighbor tables: address manipulation */
 /** @{ */
-linkaddr_t *nbr_table_get_lladdr(nbr_table_t *table, const nbr_table_item_t *item);
+inline linkaddr_t *nbr_table_get_lladdr(nbr_table_t *table, const nbr_table_item_t *item);
 /** @} */
 
 #endif /* NBR_TABLE_H_ */

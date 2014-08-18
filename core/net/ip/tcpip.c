@@ -183,6 +183,7 @@ check_for_tcp_syn(void)
 static void
 packet_input(void)
 {
+  STACK_USAGE("packet_input");
 #if UIP_CONF_IP_FORWARD
   if(uip_len > 0) {
     tcpip_is_forwarding = 1;
@@ -375,7 +376,7 @@ eventhandler(process_event_t ev, process_data_t data)
   register struct listenport *l;
 #endif /*UIP_TCP*/
   struct process *p;
-
+  STACK_USAGE("evenhandler");
   switch(ev) {
     case PROCESS_EVENT_EXITED:
       /* This is the event we get if a process has exited. We go through
@@ -795,7 +796,7 @@ tcpip_uipcall(void)
 PROCESS_THREAD(tcpip_process, ev, data)
 {
   PROCESS_BEGIN();
-  
+  STACK_USAGE("tcpip_process");
 #if UIP_TCP
  {
    static unsigned char i;

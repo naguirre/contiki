@@ -101,6 +101,8 @@ uip_icmp6_input(uint8_t type, uint8_t icode)
 {
   uip_icmp6_input_handler_t *handler = input_handler_lookup(type, icode);
 
+  STACK_USAGE("uip_icmp6_input");
+
   if(handler == NULL) {
     return UIP_ICMP6_INPUT_ERROR;
   }
